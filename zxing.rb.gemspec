@@ -4,13 +4,16 @@ $:.unshift lib unless $:.include?(lib)
 
 require 'zxing/version'
 
+java = RUBY_PLATFORM =~ /java/
+macruby = defined?(RUBY_ENGINE) && RUBY_ENGINE == "macruby"
+
 Gem::Specification.new do |s|
   s.name = "zxing.rb"
   s.version = ZXing::VERSION
 
-  s.authors = ["Steven Parkes"]
-  s.email = ["smparkes@smparkes.net"]
-  s.description = "An interface to the zxing decoder libraries. Supports zxing java under jruby and zxing C++ under 1.8.7/1.9.2 (and macruby?)."
+  s.authors = ["Frank Wang"]
+  s.email = ["ftwang@gmail.com"]
+  s.description = "An interface to the zxing decoder libraries. Supports zxing C++ under ruby 2.0.0."
 
   s.files = Dir.glob("{lib,spec}/**/*") + %w(README.rdoc CHANGELOG.rdoc)
   s.extra_rdoc_files = ["README.rdoc"]
@@ -18,8 +21,13 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/smparkes/zxing.rb"
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.3.6"
   s.summary = "Ruby interface to zxing.rb"
+  
+  if !java && !macruby
+    s.add_dependency('ffi', '~>1.1.5')
+  end
 
-  s.add_development_dependency("bundler", "~> 1.0")
+  if !java
+    s.add_dependency('rmagick')
+  end
 end
